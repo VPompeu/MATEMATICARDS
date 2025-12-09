@@ -6,11 +6,15 @@ class Card {
     }
 
     canPlayOn(otherCard, chosenColor = null) {
-        // Cartas especiais laranjas podem ser jogadas em qualquer carta
+        // Qualquer carta especial laranja pode ser jogada sobre qualquer carta
         if (this.color === 'orange' && this.type === 'special') return true;
 
-        // Qualquer carta pode ser jogada sobre uma carta especial laranja
-        if (otherCard.color === 'orange' && otherCard.type === 'special') return true;
+        // Se a carta do topo é especial laranja, qualquer carta pode ser jogada
+        // (regras específicas são tratadas fora: número ímpar via needOddNumber, coringa vira número)
+        const drawSpecials = ['Compre pela Última Carta', 'Compre pela Operação'];
+        if (otherCard.color === 'orange' && otherCard.type === 'special') {
+            return true;
+        }
         
         // Mesma cor
         if (this.color === otherCard.color) return true;
@@ -95,6 +99,8 @@ class MatematicardsGame {
         this.direction = 1; // Mantém fluxo de turnos (sentido horário)
         this.gameOver = false;
         this.saidMatematicards = false;
+        this.player1PreviousHandSize = 5; // Rastreia o tamanho da mão antes da última jogada
+        this.player1SaidMatematica = false; // Rastreia se o jogador 1 apertou MATEMÁTICA
         
         this.initDeck();
         this.shuffleDeck();
@@ -214,7 +220,7 @@ class MatematicardsGame {
         switch (card.value) {
             case 'Alterar Operador':
                 result.needOperatorChange = true;
-                result.message = 'Escolha um novo operador e descarte uma carta!';
+                result.message = 'Escolha um novo operador para a carta da mesa!';
                 return result;
 
             case 'Compre pela Última Carta':
@@ -279,6 +285,11 @@ class MatematicardsGame {
     }
 
     nextTurn() {
+        // Salva o tamanho da mão do jogador 1 antes de passar o turno
+        if (this.currentPlayerIndex === 0) {
+            this.player1PreviousHandSize = this.players[0].hand.length;
+            this.player1SaidMatematica = this.saidMatematicards;
+        }
         this.currentPlayerIndex = (this.currentPlayerIndex + this.direction + this.players.length) % this.players.length;
         this.saidMatematicards = false;
     }
@@ -308,17 +319,10 @@ class MatematicardsGame {
                 const result = this.playCard(player, i);
                 
                 if (result.needOperatorChange) {
-                    // CPU escolhe operador aleatório e descarta carta aleatória
+                    // CPU escolhe operador aleatório e aplica na operação da mesa
                     const operators = ['+', '-', '×', '÷'];
                     const randomOp = operators[Math.floor(Math.random() * operators.length)];
-                    
-                    // Descartar carta de resultado ou expressão
-                    const discardableCards = player.hand.filter(c => c.type === 'result' || c.type === 'operation');
-                    if (discardableCards.length > 0) {
-                        const cardToDiscard = discardableCards[0];
-                        const index = player.hand.indexOf(cardToDiscard);
-                        player.hand.splice(index, 1);
-                    }
+                    applyOperatorChange(randomOp);
                 }
                 
                 if (result.needNumberChoice) {
@@ -406,7 +410,9 @@ function updateUI() {
 
     // Habilitar/desabilitar botão MATEMÁTICA
     const matematicaBtn = document.getElementById('matematica-btn');
-    matematicaBtn.disabled = game.players[0].hand.length !== 1;
+    const player1 = game.players[0];
+    const canPressMathematica = player1.hand.length === 2 && player1.hand.some(card => card.canPlayOn(game.getTopCard()));
+    matematicaBtn.disabled = !canPressMathematica;
 }
 
 function playerPlayCard(cardIndex) {
@@ -414,24 +420,17 @@ function playerPlayCard(cardIndex) {
         return;
     }
 
-    // Se estiver esperando descartar carta após alterar operador
+    // Bloqueia ações até escolher o operador quando necessário
     if (waitingForOperatorChange) {
-        const card = game.players[0].hand[cardIndex];
-        if (card.type === 'result' || card.type === 'operation') {
-            game.players[0].hand.splice(cardIndex, 1);
-            waitingForOperatorChange = false;
-            showMessage('Carta descartada!', 'success');
-            game.nextTurn();
-            updateUI();
-            
-            if (!game.getCurrentPlayer().isHuman) {
-                setTimeout(cpuTurn, 1000);
-            }
-            return;
-        } else {
-            showMessage('Você deve descartar uma carta de resultado ou expressão!', 'error');
-            return;
-        }
+        showMessage('Escolha o operador para continuar.', 'info');
+        return;
+    }
+
+    // Avisar se não apertou MATEMÁTICA (mas permitir jogar - risco de acusação)
+    const player1 = game.players[0];
+    const canPressMathematica = player1.hand.length === 2 && player1.hand.some(card => card.canPlayOn(game.getTopCard()));
+    if (canPressMathematica && !game.saidMatematicards) {
+        showMessage('Atenção: Você não apertou MATEMÁTICA! Arrisca ser acusado.', 'info');
     }
 
     const card = game.players[0].hand[cardIndex];
@@ -471,6 +470,7 @@ function playerPlayCard(cardIndex) {
         waitingForOperatorChange = true;
         showOperatorModal();
         if (result.message) showMessage(result.message, 'info');
+        return;
     } else if (result.needNumberChoice) {
         waitingForNumberChoice = true;
         showNumberModal();
@@ -527,6 +527,19 @@ function drawCardAction() {
 
 function cpuTurn() {
     if (game.gameOver) return;
+
+    // CPU acusa se jogador 1 não apertou MATEMÁTICA quando tinha 2 cartas e jogou uma
+    if (game.player1PreviousHandSize === 2 && !game.player1SaidMatematica && game.players[0].hand.length === 1) {
+        game.drawCard(game.players[0]);
+        game.drawCard(game.players[0]);
+        showMessage('CPU acusou! Você não apertou MATEMÁTICA quando tinha 2 cartas e comprou 2 cartas.', 'error');
+        updateUI();
+        setTimeout(() => {
+            game.nextTurn();
+            updateUI();
+        }, 2000);
+        return;
+    }
 
     // Se precisa jogar número ímpar
     if (needOddNumber) {
@@ -613,11 +626,48 @@ function showRulesModal() {
     modal.classList.add('active');
 }
 
+function applyOperatorChange(operator) {
+    // Altera o operador da última carta de operação na pilha e traz essa carta para o topo
+    const pile = game.discardPile;
+    let opIndex = -1;
+    for (let i = pile.length - 1; i >= 0; i--) {
+        if (pile[i].type === 'operation') {
+            opIndex = i;
+            break;
+        }
+    }
+
+    if (opIndex === -1) {
+        showMessage('Não há operação na mesa para alterar.', 'error');
+        return;
+    }
+
+    const opCard = pile[opIndex];
+    const match = opCard.value.toString().match(/^(\d+)([+\-×÷])(\d+)$/);
+    if (!match) {
+        showMessage('Expressão inválida para alterar.', 'error');
+        return;
+    }
+
+    opCard.value = `${match[1]}${operator}${match[3]}`;
+
+    // Move a carta alterada para o topo da pilha
+    pile.splice(opIndex, 1);
+    pile.push(opCard);
+}
+
 function chooseOperator(operator) {
     selectedOperator = operator;
     document.getElementById('operator-modal').classList.remove('active');
-    showMessage(`Operador ${operator} escolhido! Descarte uma carta de resultado ou expressão.`, 'success');
+    applyOperatorChange(operator);
+    waitingForOperatorChange = false;
+    showMessage(`Operador alterado para ${operator}!`, 'success');
+    game.nextTurn();
     updateUI();
+
+    if (!game.getCurrentPlayer().isHuman) {
+        setTimeout(cpuTurn, 1000);
+    }
 }
 
 function showNumberModal() {
@@ -702,9 +752,11 @@ function showWinner(winnerName) {
 }
 
 function sayMatematica() {
-    if (game.players[0].hand.length === 1) {
+    const player1 = game.players[0];
+    const canPressMathematica = player1.hand.length === 2 && player1.hand.some(card => card.canPlayOn(game.getTopCard()));
+    if (canPressMathematica) {
         game.saidMatematicards = true;
-        showMessage('MATEMÁTICA!', 'success');
+        showMessage('MATEMÁTICA! Agora você pode descartar sua carta.', 'success');
     }
 }
 
