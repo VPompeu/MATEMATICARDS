@@ -285,11 +285,7 @@ class MatematicardsGame {
     }
 
     nextTurn() {
-        // Salva o tamanho da mão do jogador 1 antes de passar o turno
-        if (this.currentPlayerIndex === 0) {
-            this.player1PreviousHandSize = this.players[0].hand.length;
-            this.player1SaidMatematica = this.saidMatematicards;
-        }
+        // O estado já foi salvo antes da jogada em playerPlayCard
         this.currentPlayerIndex = (this.currentPlayerIndex + this.direction + this.players.length) % this.players.length;
         this.saidMatematicards = false;
     }
@@ -426,8 +422,11 @@ function playerPlayCard(cardIndex) {
         return;
     }
 
-    // Avisar se não apertou MATEMÁTICA (mas permitir jogar - risco de acusação)
+    // Salvar estado ANTES de jogar para detecção de acusação
     const player1 = game.players[0];
+    const handSizeBeforePlay = player1.hand.length;
+    const saidMatematicaBeforePlay = game.saidMatematicards;
+    
     const canPressMathematica = player1.hand.length === 2 && player1.hand.some(card => card.canPlayOn(game.getTopCard()));
     if (canPressMathematica && !game.saidMatematicards) {
         showMessage('Atenção: Você não apertou MATEMÁTICA! Arrisca ser acusado.', 'info');
@@ -482,6 +481,11 @@ function playerPlayCard(cardIndex) {
     } else if (result.needOddNumber) {
         needOddNumber = true;
         if (result.message) showMessage(result.message, 'info');
+        
+        // Atualizar estado antes de passar turno
+        game.player1PreviousHandSize = handSizeBeforePlay;
+        game.player1SaidMatematica = saidMatematicaBeforePlay;
+        
         game.nextTurn();
         updateUI();
         
@@ -490,6 +494,11 @@ function playerPlayCard(cardIndex) {
         }
     } else {
         if (result.message) showMessage(result.message, 'info');
+        
+        // Atualizar estado antes de passar turno
+        game.player1PreviousHandSize = handSizeBeforePlay;
+        game.player1SaidMatematica = saidMatematicaBeforePlay;
+        
         game.nextTurn();
         updateUI();
         
@@ -529,6 +538,12 @@ function cpuTurn() {
     if (game.gameOver) return;
 
     // CPU acusa se jogador 1 não apertou MATEMÁTICA quando tinha 2 cartas e jogou uma
+    console.log('CPU Turn Check:', {
+        previousSize: game.player1PreviousHandSize,
+        saidMatematica: game.player1SaidMatematica,
+        currentSize: game.players[0].hand.length
+    });
+    
     if (game.player1PreviousHandSize === 2 && !game.player1SaidMatematica && game.players[0].hand.length === 1) {
         game.drawCard(game.players[0]);
         game.drawCard(game.players[0]);
