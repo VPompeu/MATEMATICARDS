@@ -99,21 +99,17 @@ body {
 }
 
 .card-back {
-    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+    background: url('49.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
     color: white;
     cursor: default;
     overflow: hidden;
 }
 
 .card-back .card-content {
-    font-size: 0.7em;
-    line-height: 1.1;
-    padding: 6px;
-    writing-mode: vertical-rl;
-    text-orientation: mixed;
-    letter-spacing: 0.06em;
-    white-space: nowrap;
-    text-align: center;
+    display: none;
 }
 
 .card:not(.card-back):hover {
