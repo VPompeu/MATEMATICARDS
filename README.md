@@ -39,13 +39,17 @@ Números de **1 a 10** (resultados das operações)
 
 ### Cartas Especiais Laranjas 🟠
 
+**Importante**: Cartas especiais laranjas podem ser jogadas sobre qualquer carta. Cartas comuns podem ser jogadas sobre cartas especiais laranjas, exceto quando há regras específicas ("Número Ímpar" e "Coringa 0-9").
+
 #### 1. **Alterar Operador**
-- Altera o operador da expressão na mesa
-- Você deve descartar uma carta de resultado ou expressão
+- Escolha um novo operador (+, -, ×, ÷) para a expressão que está na mesa
+- Os números da operação são mantidos, apenas o operador muda
+- Exemplo: "3-1" pode virar "3×1" ou "3+1"
 
 #### 2. **Compre pela Última Carta**
 - O próximo jogador compra cartas de acordo com a última carta de resultado jogada
 - Exemplo: Se a última carta de resultado foi "5", compra 5 cartas
+- Esta carta aceita qualquer carta sobre ela
 
 #### 3. **Número Ímpar**
 - A próxima carta a ser jogada deve ser ou resultar em um número ímpar
@@ -58,22 +62,31 @@ Números de **1 a 10** (resultados das operações)
 - Troca todas as suas cartas de expressões com as do jogador escolhido
 
 #### 6. **Coringa 0-9**
-- Esta carta pode ser qualquer número de 0 a 9 que você escolher
+- Escolha um número de 0 a 9 para esta carta
+- A carta se torna uma carta de resultado com o número escolhido
 
 #### 7. **Compre pela Operação** (2 cartas)
 - O próximo jogador compra cartas de acordo com o resultado da última operação jogada
 - Exemplo: Se a última operação foi "2+3", compra 5 cartas
+- Esta carta aceita qualquer carta sobre ela
+
+## 🎯 Regra do MATEMÁTICA
+
+- Quando você tiver **2 cartas** e puder jogar pelo menos uma delas, o botão "MATEMÁTICA" será habilitado
+- Você **DEVE** apertar o botão MATEMÁTICA **ANTES** de descartar a carta
+- Se você não apertar e o próximo jogador começar a jogar (quando você ficar com 1 carta), você será acusado e comprará **2 cartas** como penalidade
+- Você pode optar por não apertar (arriscando a acusação) estrategicamente
 
 ## 🎯 Como Vencer
 
-- Quando você tiver apenas **1 carta**, clique no botão "MATEMÁTICA!" para avisar
-- Descarte sua última carta para vencer o jogo!
+- Descarte todas as suas cartas antes do oponente para vencer o jogo!
 
 ## 🎮 Controles
 
 - **Clique na carta** - Jogar a carta
-- **Botão "Comprar Carta"** - Comprar uma carta do monte
-- **Botão "MATEMÁTICA!"** - Avisar que você tem apenas 1 carta (habilitado automaticamente)
+- **Botão "Comprar Carta"** - Comprar uma carta do monte (você perde a vez ao comprar)
+- **Botão "MATEMÁTICA"** - Avisar que você está prestes a jogar sua penúltima carta (habilitado com 2 cartas jogáveis)
+- **Botão "Regras"** - Ver as regras do jogo a qualquer momento
 - **Botão "Novo Jogo"** - Reiniciar o jogo
 
 ## 🤖 Modo CPU
@@ -94,10 +107,11 @@ O jogo inclui um oponente controlado por IA que:
 ## 💡 Dicas
 
 1. Preste atenção nos resultados das operações matemáticas
-2. Use as cartas especiais laranjas estrategicamente
-3. Cartas laranjas podem ser jogadas em qualquer momento
-4. Planeje suas jogadas para combinar cores e valores
-5. Não esqueça de clicar em "MATEMÁTICA!" quando tiver 1 carta!
+2. Use as cartas especiais laranjas estrategicamente - elas podem ser jogadas sobre qualquer carta
+3. Planeje suas jogadas para combinar cores e valores
+4. Não esqueça de clicar em "MATEMÁTICA" quando tiver 2 cartas e puder jogar uma!
+5. Ao comprar uma carta, você perde a vez automaticamente
+6. A primeira carta virada nunca será uma carta especial
 
 ---
 
