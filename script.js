@@ -161,11 +161,11 @@ class MatematicardsGame {
             });
         }
 
-        // Primeira carta do monte de descarte (não pode ser coringa)
+        // Primeira carta do monte de descarte (não pode ser especial)
         let firstCard;
         do {
             firstCard = this.deck.pop();
-        } while (firstCard.color === 'wild');
+        } while (firstCard.type === 'special');
         
         this.discardPile.push(firstCard);
     }
