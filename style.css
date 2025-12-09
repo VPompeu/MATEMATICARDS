@@ -1,0 +1,412 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.game-container {
+    width: 100%;
+    max-width: 1200px;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.game-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.game-header h1 {
+    color: #333;
+    font-size: 2.5em;
+    margin-bottom: 20px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.game-info {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-top: 15px;
+}
+
+.player-info, .current-turn {
+    background: #f0f0f0;
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-size: 1.1em;
+}
+
+.game-board {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+    margin: 40px 0;
+}
+
+.deck-area {
+    display: flex;
+    gap: 50px;
+    justify-content: center;
+    align-items: center;
+}
+
+.draw-pile, .discard-pile {
+    position: relative;
+}
+
+.pile-count {
+    position: absolute;
+    bottom: -25px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #333;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-weight: bold;
+    font-size: 0.9em;
+}
+
+.card {
+    width: 120px;
+    height: 180px;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    position: relative;
+    border: 3px solid rgba(255, 255, 255, 0.8);
+}
+
+.card-back {
+    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+    color: white;
+    cursor: default;
+}
+
+.card:not(.card-back):hover {
+    transform: translateY(-10px) scale(1.05);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+}
+
+.card-content {
+    text-align: center;
+    padding: 10px;
+    word-wrap: break-word;
+}
+
+/* Cores das cartas */
+.card.red {
+    background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+    color: white;
+}
+
+.card.blue {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    color: white;
+}
+
+.card.green {
+    background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+    color: white;
+}
+
+.card.yellow {
+    background: linear-gradient(135deg, #ffd93d 0%, #ffb800 100%);
+    color: #333;
+}
+
+.card.orange {
+    background: linear-gradient(135deg, #ff6600 0%, #ff8c42 100%);
+    color: white;
+    font-size: 0.9em;
+    border: 4px solid #ff4500;
+    box-shadow: 0 0 15px rgba(255, 102, 0, 0.6);
+}
+
+.card.orange:hover {
+    box-shadow: 0 0 25px rgba(255, 102, 0, 0.8);
+}
+
+/* Cartas especiais */
+.card.special {
+    font-size: 1.2em;
+}
+
+.card.result {
+    border: 4px solid gold;
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+}
+
+.player-hand {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 15px;
+    min-height: 220px;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.btn {
+    padding: 12px 25px;
+    font-size: 1.1em;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+.btn-primary {
+    background: #4facfe;
+    color: white;
+}
+
+.btn-warning {
+    background: #ffd93d;
+    color: #333;
+}
+
+.btn-success {
+    background: #43e97b;
+    color: white;
+}
+
+.btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.message-box {
+    margin-top: 20px;
+    padding: 15px;
+    border-radius: 10px;
+    text-align: center;
+    font-size: 1.2em;
+    font-weight: bold;
+    min-height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.message-box.success {
+    background: #d4edda;
+    color: #155724;
+}
+
+.message-box.error {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+.message-box.info {
+    background: #d1ecf1;
+    color: #0c5460;
+}
+
+/* Modal */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    justify-content: center;
+    align-items: center;
+}
+
+.modal.active {
+    display: flex;
+}
+
+.modal-content {
+    background: white;
+    padding: 40px;
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    animation: modalSlideIn 0.3s ease;
+}
+
+@keyframes modalSlideIn {
+    from {
+        transform: translateY(-50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.modal-content h2 {
+    margin-bottom: 30px;
+    color: #333;
+    font-size: 2em;
+}
+
+.color-choices {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+}
+
+.color-btn {
+    width: 120px;
+    height: 120px;
+    border: none;
+    border-radius: 15px;
+    cursor: pointer;
+    font-size: 1.2em;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.color-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+}
+
+.color-btn.red {
+    background: #ff6b6b;
+    color: white;
+}
+
+.color-btn.blue {
+    background: #4facfe;
+    color: white;
+}
+
+.color-btn.green {
+    background: #43e97b;
+    color: white;
+}
+
+.color-btn.yellow {
+    background: #ffd93d;
+    color: #333;
+}
+
+.operator-choices, .number-choices, .player-choices {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.operator-btn, .number-btn, .player-choice-btn {
+    width: 80px;
+    height: 80px;
+    border: none;
+    border-radius: 15px;
+    cursor: pointer;
+    font-size: 1.5em;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.player-choice-btn {
+    width: 150px;
+    font-size: 1.2em;
+}
+
+.operator-btn:hover, .number-btn:hover, .player-choice-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+}
+
+.winner-content {
+    padding: 60px;
+}
+
+.winner-content h2 {
+    font-size: 3em;
+    margin-bottom: 30px;
+}
+
+/* Animações */
+@keyframes cardDeal {
+    from {
+        transform: translateY(-100px) rotate(180deg);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0) rotate(0);
+        opacity: 1;
+    }
+}
+
+.card-deal {
+    animation: cardDeal 0.5s ease;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .game-header h1 {
+        font-size: 1.8em;
+    }
+    
+    .card {
+        width: 90px;
+        height: 135px;
+        font-size: 1.2em;
+    }
+    
+    .deck-area {
+        gap: 30px;
+    }
+    
+    .player-hand {
+        gap: 10px;
+    }
+    
+    .color-btn {
+        width: 80px;
+        height: 80px;
+        font-size: 1em;
+    }
+}

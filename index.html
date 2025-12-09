@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MATEMÁTICARDS</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="game-container">
+        <div class="game-header">
+            <h1>MATEMÁTICARDS</h1>
+            <div class="game-info">
+                <div class="player-info">
+                    <span>Jogador 1: <strong id="player1-cards">5</strong> cartas</span>
+                </div>
+                <div class="player-info">
+                    <span>Jogador 2 (CPU): <strong id="player2-cards">5</strong> cartas</span>
+                </div>
+                <div class="current-turn">
+                    <span>Turno: <strong id="current-player">Jogador 1</strong></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="game-board">
+            <div class="deck-area">
+                <div class="draw-pile" id="draw-pile">
+                    <div class="card card-back">
+                        <div class="card-content">MATEMÁTICARDS</div>
+                    </div>
+                    <span class="pile-count" id="draw-count">80</span>
+                </div>
+                <div class="discard-pile" id="discard-pile">
+                    <div class="card" id="current-card">
+                        <div class="card-content"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="action-buttons">
+                <button id="draw-card-btn" class="btn btn-primary">Comprar Carta</button>
+                <button id="matematica-btn" class="btn btn-warning">MATEMÁTICA</button>
+                <button id="new-game-btn" class="btn btn-success">Novo Jogo</button>
+            </div>
+        </div>
+
+        <div class="player-hand" id="player-hand">
+            <!-- Cartas do jogador serão inseridas aqui -->
+        </div>
+
+        <div class="message-box" id="message-box"></div>
+    </div>
+
+
+
+    <!-- Modal de vitória -->
+    <div id="winner-modal" class="modal">
+        <div class="modal-content winner-content">
+            <h2 id="winner-text">Parabéns!</h2>
+            <button class="btn btn-success" onclick="location.reload()">Jogar Novamente</button>
+        </div>
+    </div>
+
+    <!-- Modal de escolha de operador -->
+    <div id="operator-modal" class="modal">
+        <div class="modal-content">
+            <h2>Escolha um operador</h2>
+            <div class="operator-choices">
+                <button class="operator-btn" data-operator="+">+</button>
+                <button class="operator-btn" data-operator="-">-</button>
+                <button class="operator-btn" data-operator="×">×</button>
+                <button class="operator-btn" data-operator="÷">÷</button>
+            </div>
+            <p style="margin-top: 20px;">Agora escolha uma carta para descartar:</p>
+        </div>
+    </div>
+
+    <!-- Modal de escolha de número -->
+    <div id="number-modal" class="modal">
+        <div class="modal-content">
+            <h2>Escolha um número</h2>
+            <div class="number-choices">
+                <button class="number-btn" data-number="0">0</button>
+                <button class="number-btn" data-number="1">1</button>
+                <button class="number-btn" data-number="2">2</button>
+                <button class="number-btn" data-number="3">3</button>
+                <button class="number-btn" data-number="4">4</button>
+                <button class="number-btn" data-number="5">5</button>
+                <button class="number-btn" data-number="6">6</button>
+                <button class="number-btn" data-number="7">7</button>
+                <button class="number-btn" data-number="8">8</button>
+                <button class="number-btn" data-number="9">9</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de escolha de jogador -->
+    <div id="player-modal" class="modal">
+        <div class="modal-content">
+            <h2>Escolha um jogador</h2>
+            <div class="player-choices">
+                <button class="player-choice-btn" data-player="0">Jogador 1</button>
+                <button class="player-choice-btn" data-player="1">Jogador 2 (CPU)</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
