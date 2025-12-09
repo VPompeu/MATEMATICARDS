@@ -365,6 +365,7 @@ let selectedOperator = null;
 function initGame() {
     game = new MatematicardsGame();
     updateUI();
+    showRulesModal();
     
     // Verificar se é turno do CPU
     if (!game.getCurrentPlayer().isHuman) {
@@ -607,6 +608,11 @@ function showOperatorModal() {
     });
 }
 
+function showRulesModal() {
+    const modal = document.getElementById('rules-modal');
+    modal.classList.add('active');
+}
+
 function chooseOperator(operator) {
     selectedOperator = operator;
     document.getElementById('operator-modal').classList.remove('active');
@@ -706,6 +712,10 @@ function sayMatematica() {
 document.getElementById('draw-card-btn').onclick = drawCardAction;
 document.getElementById('matematica-btn').onclick = sayMatematica;
 document.getElementById('new-game-btn').onclick = () => location.reload();
+document.getElementById('rules-btn').onclick = showRulesModal;
+document.getElementById('close-rules-btn').onclick = () => {
+    document.getElementById('rules-modal').classList.remove('active');
+};
 
 // Iniciar o jogo
 initGame();

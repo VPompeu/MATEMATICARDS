@@ -280,6 +280,29 @@ body {
     animation: modalSlideIn 0.3s ease;
 }
 
+.rules-content {
+    max-width: 720px;
+    max-height: 80vh;
+    overflow-y: auto;
+    text-align: left;
+}
+
+.rules-content h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.rules-body ul {
+    margin: 10px 0 0 20px;
+    padding: 0;
+    line-height: 1.5;
+}
+
+.rules-body p {
+    margin: 10px 0;
+    line-height: 1.4;
+}
+
 @keyframes modalSlideIn {
     from {
         transform: translateY(-50px);
